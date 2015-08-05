@@ -109,4 +109,22 @@ detachAllData<-function () {
   }
 }
 
+#### Remove row if missing value in specific collumn
 
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+
+
+Mean_0 <- function(x) base::round(mean(x, na.rm=TRUE),0)
+Mean_1 <- function(x) base::round(mean(x, na.rm=TRUE),1)
+Mean_2 <- function(x) base::round(mean(x, na.rm=TRUE),2)
+Mean_3 <- function(x) base::round(mean(x, na.rm=TRUE),3)
+Mean_4 <- function(x) base::round(mean(x, na.rm=TRUE),4)
+
+Sd_0 <- function(x) round(stats::sd(x, na.rm=TRUE),0)
+Sd_1 <- function(x) round(stats::sd(x, na.rm=TRUE),1)
+Sd_2 <- function(x) round(stats::sd(x, na.rm=TRUE),2)
+Sd_3 <- function(x) round(stats::sd(x, na.rm=TRUE),3)
+Sd_4 <- function(x) round(stats::sd(x, na.rm=TRUE),4)
