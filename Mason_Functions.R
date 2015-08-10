@@ -81,7 +81,7 @@ cor_3stars <- function(x,digit=3){
   Rnew <- cbind(Rnew[1:length(Rnew)-1])
   return(Rnew) 
 }
-#xtable(corstarsl(maleindiv[2:5]))
+
 
 ## Knitr/Sweave Stuff
 
