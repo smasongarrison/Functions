@@ -137,3 +137,16 @@ lm_eqn = function(df){
                                                                                   r2 = format(summary(m)$r.squared, digits = 3)))
   as.character(as.expression(eq));                 
 }
+
+## Extract Values from aalen
+aalen_simple_summary <- function(model=NULL)
+{ iv<-names(model$obs.testBeq0)
+  data<- data.frame(matrix(as.numeric(NA),nrow=length(iv),ncol = 7))
+  names(data)<-c("Var","obs.testBeq0","pval.testBeq0","obs.testBeqC","pval.testBeqC","obs.testBeqC.is","pval.testBeqC.is")
+  data$Var<-as.character(data$Var)
+  for(i in 1:length(iv)){
+  data[i,]<-I(c(iv[i], model$obs.testBeq0[paste0(iv[i])],model$pval.testBeq0[paste0(iv[i])],model$obs.testBeqC[paste0(iv[i])],model$pval.testBeqC[paste0(iv[i])],model$obs.testBeqC.is[paste0(iv[i])],model$pval.testBeqC.is[paste0(iv[i])]))}
+  for(i in c(2:ncol(data))) {
+    data[,i] <- as.numeric(as.character(data[,i]))
+  }
+  data}
