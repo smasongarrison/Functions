@@ -139,14 +139,31 @@ lm_eqn = function(df){
 }
 
 ## Extract Values from aalen
-aalen_simple_summary <- function(model=NULL)
-{ iv<-names(model$obs.testBeq0)
-  data<- data.frame(matrix(as.numeric(NA),nrow=length(iv),ncol = 7))
-  names(data)<-c("Var","obs.testBeq0","pval.testBeq0","obs.testBeqC","pval.testBeqC","obs.testBeqC.is","pval.testBeqC.is")
+aalen_simple_summary <- function(model=NULL){
+  iv<-names(model$obs.testBeq0)
+if(length(dimnames(model$gamma)[[1]]) >0){
+  iv = c(iv, dimnames(model$gamma)[[1]])
+}
+  diag<-as.data.frame(diag(model$robvar.gamma))
+  rownames(diag)<-colnames(model$robvar.gamma)
+  data<- data.frame(matrix(as.numeric(NA),nrow=length(iv),ncol = 10))
+  names(data)<-c("Var","obs.testBeq0","pval.testBeq0","obs.testBeqC","pval.testBeqC","obs.testBeqC.is","pval.testBeqC.is","gamma","zobs.gamma","p.gamma")
   data$Var<-as.character(data$Var)
   for(i in 1:length(iv)){
-  data[i,]<-I(c(iv[i], model$obs.testBeq0[paste0(iv[i])],model$pval.testBeq0[paste0(iv[i])],model$obs.testBeqC[paste0(iv[i])],model$pval.testBeqC[paste0(iv[i])],model$obs.testBeqC.is[paste0(iv[i])],model$pval.testBeqC.is[paste0(iv[i])]))}
+    if(substr(iv[i],1,6)!="const("){
+  data[i,]<-I(c(iv[i],model$obs.testBeq0[paste0(iv[i])],model$pval.testBeq0[paste0(iv[i])],model$obs.testBeqC[paste0(iv[i])],model$pval.testBeqC[paste0(iv[i])],model$obs.testBeqC.is[paste0(iv[i])],model$pval.testBeqC.is[paste0(iv[i])],NA,NA,NA))
+  }
+    if(substr(iv[i],1,6)=="const("){
+      data[i,]<-I(c(iv[i], NA,NA,NA,NA,NA,NA,model$gamma[paste0(iv[i]),],model$gamma[paste0(iv[i]),]/sqrt(diag[paste0(iv[i]),1]),2*pnorm(-abs(model$gamma[paste0(iv[i]),]/sqrt(diag[paste0(iv[i]),1])))))
+                    }
+  }
   for(i in c(2:ncol(data))) {
     data[,i] <- as.numeric(as.character(data[,i]))
   }
+  names(data)<-c("Var","t obs","p","Kolmogorov-Smirnov","p(K-S)","Cramer von Mises ","p(CvM)", "Parametric Gamma","z(gamma)","p(z(gamma))")
   data}
+### Transpose Data Frame
+transpose_dataframe<- function(dataframe=NULL)
+{tdataframe <- as.data.frame(t(dataframe[,-1]))
+colnames(tdataframe) <-  dataframe[,1]
+tdataframe}
