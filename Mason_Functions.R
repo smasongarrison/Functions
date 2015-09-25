@@ -45,11 +45,11 @@ cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){
   colnames(Rnew) <- paste(colnames(x), "", sep="") 
   
   Rnew <- as.matrix(Rnew)
-  if(include.n==FALSE){
+  if(!include.n){
     ## remove upper triangle
     Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
   }
-  if(include.n==TRUE){
+  if(include.n){
     #repalce upper triange with sample size
     require(psych)
     ct<-corr.test(x)
