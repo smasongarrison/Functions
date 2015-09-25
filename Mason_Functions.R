@@ -26,7 +26,7 @@ df_AceEstimate=function(ACE){
   data}
 
 # Correlation Matrix Nice
-cor_1star <- function(x,digit=3,sig=.05){ 
+cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){ 
   require(Hmisc) 
   x <- as.matrix(x) 
   R <- rcorr(x)$r 
@@ -44,13 +44,23 @@ cor_1star <- function(x,digit=3,sig=.05){
   rownames(Rnew) <- colnames(x) 
   colnames(Rnew) <- paste(colnames(x), "", sep="") 
   
-  ## remove upper triangle
   Rnew <- as.matrix(Rnew)
-  Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+  if(include.n==FALSE){
+    ## remove upper triangle
+    Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+  }
+  if(include.n==TRUE){
+    #repalce upper triange with sample size
+    require(psych)
+    ct<-corr.test(x)
+    ct<-as.matrix(ct$n)
+    Rnew[upper.tri(Rnew, diag = TRUE)] <- ct[upper.tri(ct, diag = TRUE)]
+  }
   Rnew <- as.data.frame(Rnew) 
-  
   ## remove last column and return the matrix (which is now a data frame)
+
   Rnew <- cbind(Rnew[1:length(Rnew)-1])
+
   return(Rnew) 
 }
 
