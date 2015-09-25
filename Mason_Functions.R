@@ -57,9 +57,10 @@ cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){
     Rnew[upper.tri(Rnew, diag = TRUE)] <- ct[upper.tri(ct, diag = TRUE)]
   }
   Rnew <- as.data.frame(Rnew) 
-  ## remove last column and return the matrix (which is now a data frame)
+  ## NOT remove last column and 
+  #return the matrix (which is now a data frame)
 
-  Rnew <- cbind(Rnew[1:length(Rnew)-1])
+  Rnew <- cbind(Rnew[1:length(Rnew)])#-1])
 
   return(Rnew) 
 }
