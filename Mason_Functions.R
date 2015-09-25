@@ -48,6 +48,8 @@ cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){
   if(!include.n){
     ## remove upper triangle
     Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+    Rnew <- as.data.frame(Rnew) 
+    Rnew <- cbind(Rnew[1:length(Rnew)-1])
   }
   if(include.n){
     #repalce upper triange with sample size
@@ -55,12 +57,13 @@ cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){
     ct<-corr.test(x)
     ct<-as.matrix(ct$n)
     Rnew[upper.tri(Rnew, diag = TRUE)] <- ct[upper.tri(ct, diag = TRUE)]
+    Rnew <- as.data.frame(Rnew) 
+    Rnew <- cbind(Rnew[1:length(Rnew)])#-1])
   }
-  Rnew <- as.data.frame(Rnew) 
-  ## NOT remove last column and 
-  #return the matrix (which is now a data frame)
 
-  Rnew <- cbind(Rnew[1:length(Rnew)])#-1])
+
+
+  
 
   return(Rnew) 
 }
