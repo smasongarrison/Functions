@@ -38,21 +38,22 @@ library(timereg)
 set.seed(1234)
 
 
-ols_m <- glm(A_ACT_74 ~ A_ACT_65 + P_ACT_65 + factor(MALE), data=val)
+#ols_m <- glm(A_ACT_74 ~ A_ACT_65 + P_ACT_65 + factor(MALE), data=val)
 summary(ols_m)
 
-aalen_m1 <- aalen(Surv(time=Mort_Start, 
-  time2=Mort_End, event=Mort_Event) ~ const(factor(MALE)) + const(A_ACT_74) + const(A_ACT_65) + const(P_ACT_65), data = val, robust=T )
+#aalen_m1 <- aalen(Surv(time=Mort_Start, 
+ # time2=Mort_End, event=Mort_Event) ~ const(factor(MALE)) + const(A_ACT_74) + const(A_ACT_65) + const(P_ACT_65), data = val, robust=T )
 
 
-glm_model<-ols_m
-survival_model<-aalen_m1
-indep_var<-"A_ACT_74"
-med_var<-"P_ACT_65"
+#glm_model<-ols_m
+#survival_model<-aalen_m1
+#indep_var<-"A_ACT_74"
+#med_var<-"P_ACT_65"
 
 ###Actual Function
 CI_comp <- function(glm_model=NULL,survival_model=NULL,med_var="med_var",indep_var="indep_var",G=10^4,constant=1)
 {
+  require(timereg)
 if(constant==1){
   mean_lambda1<-as.data.frame(survival_model$gamma)[paste0("const(",indep_var,")"),] #natural direct effect
   mean_lambda3 <-as.data.frame(survival_model$gamma)[paste0("const(",med_var,")"),] #natural indirect effect
@@ -83,5 +84,5 @@ print(quantile(Q,c(0.025, 0.975)))
 } else{ print("Sorry, I haven't coded non-constant effects") }
 }
 ###########################
-CI_comp(glm_model=glm_model,survival_model=survival_model,med_var=med_var,indep_var=indep_var,G=10^4,constant=1)
+#CI_comp(glm_model=glm_model,survival_model=survival_model,med_var=med_var,indep_var=indep_var,G=10^4,constant=1)
 
