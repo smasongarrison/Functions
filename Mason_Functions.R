@@ -181,3 +181,19 @@ transpose_dataframe<- function(dataframe=NULL)
 {tdataframe <- as.data.frame(t(dataframe[,-1]))
 colnames(tdataframe) <-  dataframe[,1]
 tdataframe}
+
+### Use String in Seed
+create.seed.alpha <- function(x) {
+  require("digest")
+  hexval <- paste0("0x",digest(x,"crc32"))
+  intval <- type.convert(hexval) %% .Machine$integer.max
+  return(intval)
+}
+
+
+set.seed.alpha <- function(x) {
+  require("digest")
+  hexval <- paste0("0x",digest(x,"crc32"))
+  intval <- type.convert(hexval) %% .Machine$integer.max
+  set.seed(intval)
+}
