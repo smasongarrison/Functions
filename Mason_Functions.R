@@ -97,14 +97,6 @@ cor_3stars <- function(x,digit=3){
 }
 
 
-## Knitr/Sweave Stuff
-
-
-listing<- function(x, options) {
- paste0("\\begin{lstlisting}[breaklines=true]\n",
-        x, "\\end{lstlisting}\n")
-}
-
 ### Modified detachAllData from defunct epicalc package
 detachAllData<-function () {
   pos.to.detach <- (1:length(search()))[substring(search(), 
