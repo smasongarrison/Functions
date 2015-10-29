@@ -1,31 +1,7 @@
-# Missing Data Removed Default, Rounding Added
-Mean <- function(x,digit=3) {
-  round(mean(x, na.rm=TRUE),digit)}
-Sd <- function(x,digit=3) {
-  round(sd(x, na.rm=TRUE),digit)}
-Median <- function(x,digit=3) {
-  round(median(x, na.rm=TRUE),digit)}
-Min <- function(x,digit=3) {
-  round(min(x, na.rm=TRUE),digit)} 
-Max <- function(x,digit=3) {
-  round(max(x, na.rm=TRUE),digit)}
+########## Functions Mason Garrison Commonly Uses. I do not claim I wrote these functions. I typically have modified existing code to suite my purposes.
 
-RowMedians <-function(x,digit=3,na.rm = TRUE) {
-  round(rowMedians(as.matrix(x), na.rm=na.rm),digit)
-  }
-
-Cor <- function(x,digit=3) {
-  round(cor(x, use = "pairwise.complete.obs"),digit)}
-# Reverse Substrinf
-substrRight <- function(x, n, fromend=0, end=nchar(x)-fromend){
-  substr(x, end-n+1,end)}
-
-df_AceEstimate=function(ACE){
-  data<-data.frame(ACE@ASquared,ACE@CSquared,ACE@ESquared,ACE@CaseCount)
-  names(data)<-c("ASquared","CSquared","ESquared","CaseCount")
-  data}
-
-# Correlation Matrix Nice
+# cor_1star
+## Prints out clean correlation matrix. If you want to replace the upper triangle with the sample size, toggle include.n, whose default is FALSE.
 cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){ 
   require(Hmisc) 
   x <- as.matrix(x) 
@@ -60,13 +36,93 @@ cor_1star <- function(x,digit=3,sig=.05,include.n=FALSE){
     Rnew <- as.data.frame(Rnew) 
     Rnew <- cbind(Rnew[1:length(Rnew)])#-1])
   }
-
-
-
   
-
   return(Rnew) 
 }
+
+
+
+# detachAllData
+## Modified detachAllData function from defunct epicalc package. Allows user to detach all datasets at once.
+detachAllData<-function () {
+  pos.to.detach <- (1:length(search()))[
+    substring(search(),first = 1, last = 8)
+    !="package:"&search() 
+    !=".GlobalEnv"&search()
+    !="Autoloads"&search() 
+    !="CheckExEnv"&search() 
+    !="tools:rstudio"&search() 
+    !="TempEnv"]
+  for (i in 1:length(pos.to.detach)) {
+    if (length(pos.to.detach) > 0) {
+      detach(pos = pos.to.detach[1])
+      pos.to.detach <- (1:length(search()))[
+        substring(search(),first = 1, last = 8) 
+        !="package:"&search() 
+        !=".GlobalEnv"&search() 
+        !="Autoloads"&search() 
+        !="CheckExEnv"&search() 
+        !="tools:rstudio"&search() 
+        !="TempEnv"]
+    }
+  }
+}
+
+# Reverse Substring
+substrRight <- function(x, n, fromend=0, end=nchar(x)-fromend){
+  substr(x, end-n+1,end)}
+
+# ROUNDING FUNCTIONS
+## Function rounds to three digits and defaults to na.rm = TRUE
+## Cor
+Cor <- function(x,digit=3, use="pairwise.complete.obs") {
+  round(cor(x, use = use),digit)}
+
+## Max
+Max <- function(x,digit=3,na.rm = TRUE) {
+  round(max(x, na.rm=na.rm),digit)}
+
+## Mean
+Mean <- function(x,digit=3,na.rm = TRUE) {
+  round(mean(x, na.rm=na.rm),digit)}
+
+## Median
+Median <- function(x,digit=3,na.rm = TRUE) {
+  round(median(x, na.rm=na.rm),digit)}
+
+## Min
+Min <- function(x,digit=3,na.rm = TRUE) {
+  round(min(x, na.rm=na.rm),digit)} 
+
+## RowMedians
+RowMedians <-function(x,digit=3,na.rm = TRUE) {
+  round(rowMedians(as.matrix(x), na.rm=na.rm),digit)}
+
+## Sd
+Sd <- function(x,digit=3,na.rm = TRUE) {
+  round(sd(x, na.rm=na.rm),digit)}
+
+# seed.alpha
+## Function converts string into hex. Set 'set.seed' to TRUE if you want the seed set. Set 'keep.seed' to FALSE if you don't want the seed value returned.
+seed.alpha <- function(x,set.seed=FALSE,keep.seed=TRUE) {
+  require("digest")
+  hexval <- paste0("0x",digest(x,"crc32"))
+  intval <- type.convert(hexval) %% .Machine$integer.max
+  if(set.seed){
+    set.seed(intval)
+  }
+  if(keep.seed){
+    return(intval)
+  }
+}
+
+
+df_AceEstimate=function(ACE){
+  data<-data.frame(ACE@ASquared,ACE@CSquared,ACE@ESquared,ACE@CaseCount)
+  names(data)<-c("ASquared","CSquared","ESquared","CaseCount")
+  data}
+
+
 
 cor_3stars <- function(x,digit=3){ 
   require(Hmisc) 
@@ -97,23 +153,7 @@ cor_3stars <- function(x,digit=3){
 }
 
 
-### Modified detachAllData from defunct epicalc package
-detachAllData<-function () {
-  pos.to.detach <- (1:length(search()))[substring(search(), 
-                                                  first = 1, last = 8) != "package:" & search() != ".GlobalEnv" & 
-                                          search() != "Autoloads" & search() != "CheckExEnv" & 
-                                          search() != "tools:rstudio" & search() != "TempEnv"]
-  for (i in 1:length(pos.to.detach)) {
-    if (length(pos.to.detach) > 0) {
-      detach(pos = pos.to.detach[1])
-      pos.to.detach <- (1:length(search()))[substring(search(), 
-                                                      first = 1, last = 8) != "package:" & search() != 
-                                              ".GlobalEnv" & search() != "Autoloads" & search() != 
-                                              "CheckExEnv" & search() != "tools:rstudio" & 
-                                              search() != "TempEnv"]
-    }
-  }
-}
+
 
 #### Remove row if missing value in specific collumn
 
@@ -122,7 +162,7 @@ completeFun <- function(data, desiredCols) {
   return(data[completeVec, ])
 }
 
-
+#### Legacy Functions
 Mean_0 <- function(x) base::round(mean(x, na.rm=TRUE),0)
 Mean_1 <- function(x) base::round(mean(x, na.rm=TRUE),1)
 Mean_2 <- function(x) base::round(mean(x, na.rm=TRUE),2)
@@ -174,18 +214,10 @@ transpose_dataframe<- function(dataframe=NULL)
 colnames(tdataframe) <-  dataframe[,1]
 tdataframe}
 
-### Use String in Seed
-create.seed.alpha <- function(x) {
-  require("digest")
-  hexval <- paste0("0x",digest(x,"crc32"))
-  intval <- type.convert(hexval) %% .Machine$integer.max
-  return(intval)
-}
 
 
-set.seed.alpha <- function(x) {
-  require("digest")
-  hexval <- paste0("0x",digest(x,"crc32"))
-  intval <- type.convert(hexval) %% .Machine$integer.max
-  set.seed(intval)
+#### Find True Price
+
+True.Price<-function(price=NULL,stock=NULL,base=100) {
+  return(price*base/stock)
 }
